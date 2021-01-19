@@ -3,17 +3,12 @@ from django.contrib import admin
 
 from .models import *
 
-
-
-
-
 class NotebookAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
             return ModelChoiceField(Category.objects.filter(slag='Notebooks'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
 
 
 class SmartphoneAdmin(admin.ModelAdmin):

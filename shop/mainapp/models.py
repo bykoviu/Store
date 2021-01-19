@@ -6,6 +6,27 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 User = get_user_model()
 
 
+class LatestProductManager:
+
+    @staticmethod
+    def get_products_for_mn(*args, **kwargs):
+
+        prioritet = kwargs.get('prioritet')
+        products = []
+        ct_models = ContentType.objects.filter(model__in=args)
+        for ct_model in ct_models:
+            model_products = ct_model.model_class()._base_manager.all().orderby('-id')[:5]
+            products.extend(model_products)
+        if prioritet:
+            ct_model = ContentType.objects.filter(model=prioritet)
+            if ct_model.exists():
+                if prioritet in args:
+                    return sorted(products, key=lambda x: x.__class__._meta.model_name.startswith(prioritet), reverse=True)
+        return products
+
+class LatestProducts:
+
+    objects = LatestProductManager
 # Category
 # Product
 # CartProduct
@@ -99,6 +120,6 @@ class Bayer(models.Model):
 
 
 
-    
+
 
 
