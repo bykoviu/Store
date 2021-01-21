@@ -7,11 +7,17 @@ from PIL import Image
 
 class NotebookAdminForm(ModelForm):
 
-
     def __init__(self, *args, **kwargs):
+
         super().__init__(*args, **kwargs)
-        self.fields['image'].help_text = mark_safe('<span style="color:red; font-size:16px;"> Загружайте изображение с минимальный разрешением от {}x{}'.format(*Product.MIN_RESOLUTION)) \
-                                         + mark_safe('<span style="color:red; font-size:16px;"> до {}x{}'.format(*Product.MAX_RESOLUTION))
+        self.fields['image'].help_text = mark_safe(
+            '<span style="color:red; font-size:16px;"> Загружайте изображение с минимальный разрешением от {}x{}'.format(
+                                                                                                *Product.MIN_RESOLUTION)
+                                                                                        ) \
+                                         + \
+                                         mark_safe(
+                                             '<span style="color:red; font-size:16px;"> до {}x{}'.format(*Product.MAX_RESOLUTION)
+                                         )
 
     def clean_image(self):
         image = self.cleaned_data['image']
@@ -34,7 +40,7 @@ class NotebookAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slag='Notebooks'))
+            return ModelChoiceField(Category.objects.filter(slug='notebooks'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -42,7 +48,7 @@ class SmartphoneAdmin(admin.ModelAdmin):
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'category':
-            return ModelChoiceField(Category.objects.filter(slag='Smartphones'))
+            return ModelChoiceField(Category.objects.filter(slug='smartphones'))
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
