@@ -52,9 +52,21 @@ class SmartphoneAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
+class TvsetAdmin(admin.ModelAdmin):
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'category':
+            return ModelChoiceField(Category.objects.filter(slug='tvsets'))
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+
+
+
 admin.site.register(Category)
 admin.site.register(Notebook, NotebookAdmin)
 admin.site.register(Smartphone, SmartphoneAdmin)
 admin.site.register(CartProduct)
 admin.site.register(Cart)
 admin.site.register(Bayer)
+admin.site.register(TvSet)

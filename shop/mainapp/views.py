@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import Notebook, Smartphone
+from .models import Notebook, Smartphone, TvSet
 
 
 def index(request):
@@ -11,7 +11,8 @@ class ProductDetailView(DetailView):
 
     CT_MODEL_MODEL_CLASS = {
         'notebooks': Notebook,
-        'smartphones': Smartphone
+        'smartphones': Smartphone,
+        'tvsets': TvSet
     }
 
     def dispatch(self, request, *args, **kwargs):

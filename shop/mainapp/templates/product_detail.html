@@ -21,8 +21,10 @@
     <p class="pt-4">Характеристики:</p>
     {% if product.category.slug == 'smartphones' %}
         {% include 'smartphone_specification.html' %}
-    {% else %}
+    {% elif product.category.slug == 'notebooks' %}
         {% include 'notebook_specification.html' %}
+    {% elif product.category.slug == 'tvsets' %}
+        {% include 'tvset_specification.html' %}
     {% endif %}
 </div>
 

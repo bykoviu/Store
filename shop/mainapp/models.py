@@ -66,8 +66,8 @@ class Category(models.Model):
 class Product(models.Model):
 
     MIN_RESOLUTION = (400, 400)
-    MAX_RESOLUTION = (700, 700)
-    MAX_IMAGE_SIZE = 3145728
+    MAX_RESOLUTION = (1200, 1200)
+    MAX_IMAGE_SIZE = 31457280
 
     class Meta:
         abstract = True
@@ -117,10 +117,30 @@ class Smartphone(Product):
     resolution = models.CharField(max_length=255, verbose_name='Разрешение экрана')
     accum_volume = models.CharField(max_length=255, verbose_name='Емкость батареи')
     ram = models.CharField(max_length=255, verbose_name='Оперативная память')
-    sd = models.BooleanField(default=True)
-    sd_volume_max = models.CharField(max_length=255, verbose_name='Максимальный объем встраиваемого накопителя')
+    sd = models.BooleanField(default=True, verbose_name='Наличие SD карты')
+    sd_volume_max = models.CharField(max_length=255, null=True, blank=True, verbose_name='Максимальный объем встраиваемого накопителя')
     main_cam_mp = models.CharField(max_length=255, verbose_name='Основная камера')
     front_cam_mp = models.CharField(max_length=255, verbose_name='Фронтальная камера')
+
+    def __str__(self):
+        return '{} : {}'.format(self.category, self.title)
+
+    def get_absolut_url(self):
+        return get_product_url(self, 'product_detail')
+
+
+class TvSet(Product):
+
+    diagonal = models.CharField(max_length=255, verbose_name='Диагональ')
+    display = models.CharField(max_length=255, verbose_name='Тип дисплея')
+    resolution = models.CharField(max_length=255, verbose_name='Разрешение экрана')
+    smart_tv = models.BooleanField(default=True, verbose_name='Наличие смарт тв')
+    os_smart_tv = models.CharField(max_length=255, null=True, blank=True,
+                                     verbose_name='Операционная система смарт')
+    wifi = models.BooleanField(default=True, verbose_name='Наличие беспроводного интернета')
+    bonus = models.BooleanField(default=True, verbose_name='Наличие бонусных подписок')
+    bonus_name = models.CharField(max_length=255, null=True, blank=True,
+                                   verbose_name='Какие именно подписки')
 
     def __str__(self):
         return '{} : {}'.format(self.category, self.title)
@@ -140,7 +160,7 @@ class CartProduct(models.Model):
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='Сумма')
 
     def __str__(self):
-        return 'Товар: {} '.format(self.product.title)
+        return 'Товар: {} '.format(self.content_object.title)
 
 
 class Cart(models.Model):
@@ -149,6 +169,8 @@ class Cart(models.Model):
     products = models.ForeignKey(CartProduct, blank=True, on_delete=models.CASCADE, related_name='related_cart')
     total_products = models.PositiveIntegerField(default=0)
     total_price = models.DecimalField(max_digits=9, decimal_places=2, verbose_name='общая цена')
+    in_order = models.BooleanField(default=False)
+    for_anonymus_user = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)
